@@ -1,0 +1,90 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Status
+ *
+ * @ORM\Table(name="status", indexes={@ORM\Index(name="IDX_7B00651C7597D3FE", columns={"member_id"}), @ORM\Index(name="IDX_7B00651CD182060A", columns={"prospect_id"}), @ORM\Index(name="IDX_7B00651CCD9CFB16", columns={"status_type_id"})})
+ * @ORM\Entity
+ */
+class Status
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="status_datetime", type="datetime", nullable=true)
+     */
+    private $statusDatetime;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="status_from_date", type="datetime", nullable=true)
+     */
+    private $statusFromDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="status_thru_date", type="datetime", nullable=true)
+     */
+    private $statusThruDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="from_date", type="datetime", nullable=true)
+     */
+    private $fromDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="thru_date", type="datetime", nullable=true)
+     */
+    private $thruDate;
+
+    /**
+     * @var \Member
+     *
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="member_id", referencedColumnName="id")
+     * })
+     */
+    private $member;
+
+    /**
+     * @var \StatusType
+     *
+     * @ORM\ManyToOne(targetEntity="StatusType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="status_type_id", referencedColumnName="id")
+     * })
+     */
+    private $statusType;
+
+    /**
+     * @var \Prospect
+     *
+     * @ORM\ManyToOne(targetEntity="Prospect")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="prospect_id", referencedColumnName="id")
+     * })
+     */
+    private $prospect;
+
+
+}

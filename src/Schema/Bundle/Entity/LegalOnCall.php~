@@ -1,0 +1,49 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * LegalOnCall
+ *
+ * @ORM\Table(name="legal_on_call", indexes={@ORM\Index(name="IDX_42DEBB0E4C19F89F", columns={"lawyer_id"})})
+ * @ORM\Entity
+ */
+class LegalOnCall
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="begin", type="datetime", nullable=true)
+     */
+    private $begin;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="end", type="datetime", nullable=true)
+     */
+    private $end;
+
+    /**
+     * @var \Lawyer
+     *
+     * @ORM\ManyToOne(targetEntity="Lawyer")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="lawyer_id", referencedColumnName="id")
+     * })
+     */
+    private $lawyer;
+
+
+}

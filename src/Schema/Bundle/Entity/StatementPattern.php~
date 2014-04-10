@@ -1,0 +1,39 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * StatementPattern
+ *
+ * @ORM\Table(name="statement_pattern")
+ * @ORM\Entity
+ */
+class StatementPattern
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="interval", type="string", length=45, nullable=true)
+     */
+    private $interval;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="post_day", type="string", length=45, nullable=true)
+     */
+    private $postDay;
+
+
+}

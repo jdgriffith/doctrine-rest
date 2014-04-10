@@ -1,0 +1,74 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * PacContribution
+ *
+ * @ORM\Table(name="pac_contribution")
+ * @ORM\Entity
+ */
+class PacContribution
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=45, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address", type="text", nullable=true)
+     */
+    private $address;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city", type="string", length=45, nullable=true)
+     */
+    private $city;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="zip", type="string", length=5, nullable=true)
+     */
+    private $zip;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="state", type="string", length=45, nullable=true)
+     */
+    private $state;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="amount", type="string", length=45, nullable=true)
+     */
+    private $amount;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="plan_type", type="string", length=45, nullable=true)
+     */
+    private $planType;
+
+
+}

@@ -1,0 +1,56 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * GroupCredit
+ *
+ * @ORM\Table(name="group_credit", indexes={@ORM\Index(name="fk_group_group_credit_idx", columns={"group_id"})})
+ * @ORM\Entity
+ */
+class GroupCredit
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="amount", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $amount;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime", nullable=true)
+     */
+    private $date;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="note", type="text", nullable=true)
+     */
+    private $note;
+
+    /**
+     * @var \LocalGroup
+     *
+     * @ORM\ManyToOne(targetEntity="LocalGroup")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     * })
+     */
+    private $group;
+
+
+}

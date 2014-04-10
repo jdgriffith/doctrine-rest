@@ -1,0 +1,73 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * MemberJob
+ *
+ * @ORM\Table(name="member_job", indexes={@ORM\Index(name="IDX_CA7CC0A37597D3FE", columns={"member_id"}), @ORM\Index(name="IDX_CA7CC0A38907B2A", columns={"member_officer_type_id"})})
+ * @ORM\Entity
+ */
+class MemberJob
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=60, nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="department", type="string", length=100, nullable=true)
+     */
+    private $department;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="begin_date", type="datetime", nullable=true)
+     */
+    private $beginDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     */
+    private $endDate;
+
+    /**
+     * @var \Member
+     *
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="member_id", referencedColumnName="id")
+     * })
+     */
+    private $member;
+
+    /**
+     * @var \MemberOfficerType
+     *
+     * @ORM\ManyToOne(targetEntity="MemberOfficerType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="member_officer_type_id", referencedColumnName="id")
+     * })
+     */
+    private $memberOfficerType;
+
+
+}

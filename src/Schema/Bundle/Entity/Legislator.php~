@@ -1,0 +1,386 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Legislator
+ *
+ * @ORM\Table(name="legislator", indexes={@ORM\Index(name="IDX_A7DD3A46B08FA272", columns={"district_id"})})
+ * @ORM\Entity
+ */
+class Legislator
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="state_census_code", type="string", length=2, nullable=true)
+     */
+    private $stateCensusCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="district_type_code", type="string", length=1, nullable=true)
+     */
+    private $districtTypeCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="district_code", type="string", length=3, nullable=true)
+     */
+    private $districtCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="legislator_identification_number", type="string", length=6, nullable=true)
+     */
+    private $legislatorIdentificationNumber;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=15, nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="first_name", type="string", length=12, nullable=true)
+     */
+    private $firstName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="middle_name", type="string", length=12, nullable=true)
+     */
+    private $middleName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="last_name", type="string", length=20, nullable=true)
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="suffix", type="string", length=3, nullable=true)
+     */
+    private $suffix;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="party", type="string", length=3, nullable=true)
+     */
+    private $party;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="gender", type="string", length=1, nullable=true)
+     */
+    private $gender;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=100, nullable=true)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", length=100, nullable=true)
+     */
+    private $url;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="district_office_address_line_1", type="string", length=255, nullable=true)
+     */
+    private $districtOfficeAddressLine1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="district_office_address_line_2", type="string", length=255, nullable=true)
+     */
+    private $districtOfficeAddressLine2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="district_office_city", type="string", length=255, nullable=true)
+     */
+    private $districtOfficeCity;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="district_office_state", type="string", length=255, nullable=true)
+     */
+    private $districtOfficeState;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="district_office_zip_plus", type="string", length=255, nullable=true)
+     */
+    private $districtOfficeZipPlus;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="district_office_phone", type="string", length=255, nullable=true)
+     */
+    private $districtOfficePhone;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="district_office_fax", type="string", length=255, nullable=true)
+     */
+    private $districtOfficeFax;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="capitolt_office_address_line_1", type="string", length=255, nullable=true)
+     */
+    private $capitoltOfficeAddressLine1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="capitolt_office_address_line_2", type="string", length=255, nullable=true)
+     */
+    private $capitoltOfficeAddressLine2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="capitolt_office_city", type="string", length=255, nullable=true)
+     */
+    private $capitoltOfficeCity;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="capitolt_office_state", type="string", length=255, nullable=true)
+     */
+    private $capitoltOfficeState;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="capitolt_office_zip_plus", type="string", length=255, nullable=true)
+     */
+    private $capitoltOfficeZipPlus;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="capitolt_office_phone", type="string", length=255, nullable=true)
+     */
+    private $capitoltOfficePhone;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="capitolt_office_fax", type="string", length=255, nullable=true)
+     */
+    private $capitoltOfficeFax;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_1", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_2", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_3", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment3;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_4", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment4;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_5", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment5;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_6", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment6;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_7", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment7;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_8", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment8;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_9", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment9;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_10", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment10;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_11", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment11;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_12", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment12;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_13", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment13;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_14", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment14;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_15", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment15;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_16", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment16;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_17", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment17;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_18", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment18;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_19", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment19;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="committee_assignment_20", type="string", length=255, nullable=true)
+     */
+    private $committeeAssignment20;
+
+    /**
+     * @var \District
+     *
+     * @ORM\ManyToOne(targetEntity="District")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="district_id", referencedColumnName="id")
+     * })
+     */
+    private $district;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Committee", inversedBy="legislator")
+     * @ORM\JoinTable(name="legislator_committee",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="legislator_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="committee_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $committee;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->committee = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+}

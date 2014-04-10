@@ -1,0 +1,28 @@
+{
+    "name": "oodle/krumo-bundle",
+    "type": "symfony-bundle",
+    "description": "Hooks for using KRUMO from within Symfony -- KRUMO - version 2.0 of print_r(); and var_dump();",
+    "license": "LGPL",
+    "keywords": ["debug", "debugging", "pretty", "print", "print_r", "var_dump", "symfony2", "KrumoBundle", "krumo"],
+    "authors": [
+        {
+            "name": "Matthew J. Mucklo",
+            "email": "mmucklo@corp.oodle.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/http-foundation": ">=2.1,<2.5-dev",
+        "symfony/routing": ">=2.1,<2.5-dev",
+        "symfony/config": ">=2.1,<2.5-dev",
+        "twig/twig": ">=1.10,<2.0-dev",
+        "oodle/krumo": ">=0.2.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "Oodle\\KrumoBundle": ""
+        }
+    },
+    "target-dir": "Oodle/KrumoBundle"
+}
+

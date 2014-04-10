@@ -1,0 +1,74 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * StatusHistory
+ *
+ * @ORM\Table(name="status_history")
+ * @ORM\Entity
+ */
+class StatusHistory
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="member_id", type="integer", nullable=true)
+     */
+    private $memberId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="string", length=45, nullable=true)
+     */
+    private $status;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="status_date", type="datetime", nullable=true)
+     */
+    private $statusDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="reason", type="string", length=100, nullable=true)
+     */
+    private $reason;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="first_payment_date", type="datetime", nullable=true)
+     */
+    private $firstPaymentDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="recorded_date", type="datetime", nullable=true)
+     */
+    private $recordedDate;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="updated_user_id", type="integer", nullable=true)
+     */
+    private $updatedUserId;
+
+
+}

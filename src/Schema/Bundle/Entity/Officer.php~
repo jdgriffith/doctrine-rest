@@ -1,0 +1,49 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Officer
+ *
+ * @ORM\Table(name="officer", indexes={@ORM\Index(name="fk_member_officer_idx", columns={"member_id"})})
+ * @ORM\Entity
+ */
+class Officer
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=45, nullable=true)
+     */
+    private $title;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="display_order", type="integer", nullable=true)
+     */
+    private $displayOrder;
+
+    /**
+     * @var \Member
+     *
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="member_id", referencedColumnName="id")
+     * })
+     */
+    private $member;
+
+
+}

@@ -1,0 +1,73 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Authcode
+ *
+ * @ORM\Table(name="authcode", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_F1D7D1775F37A13B", columns={"token"})}, indexes={@ORM\Index(name="IDX_F1D7D17719EB6921", columns={"client_id"}), @ORM\Index(name="IDX_F1D7D177A76ED395", columns={"user_id"})})
+ * @ORM\Entity
+ */
+class Authcode
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token", type="string", length=255, nullable=false)
+     */
+    private $token;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="redirect_uri", type="text", nullable=false)
+     */
+    private $redirectUri;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="expires_at", type="integer", nullable=true)
+     */
+    private $expiresAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="scope", type="string", length=255, nullable=true)
+     */
+    private $scope;
+
+    /**
+     * @var \Client
+     *
+     * @ORM\ManyToOne(targetEntity="Client")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     * })
+     */
+    private $client;
+
+    /**
+     * @var \FosUserUser
+     *
+     * @ORM\ManyToOne(targetEntity="FosUserUser")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * })
+     */
+    private $user;
+
+
+}

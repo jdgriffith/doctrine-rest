@@ -1,0 +1,84 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * MembersChangePaymentTypeHistory
+ *
+ * @ORM\Table(name="members_change_payment_type_history", indexes={@ORM\Index(name="IDX_A1E9285A7597D3FE", columns={"member_id"})})
+ * @ORM\Entity
+ */
+class MembersChangePaymentTypeHistory
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="reviewed", type="boolean", nullable=true)
+     */
+    private $reviewed;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="current_payment_type_id", type="integer", nullable=true)
+     */
+    private $currentPaymentTypeId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="new_payment_type_id", type="integer", nullable=true)
+     */
+    private $newPaymentTypeId;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="update_date", type="datetime", nullable=true)
+     */
+    private $updateDate;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="updated_user_id", type="integer", nullable=true)
+     */
+    private $updatedUserId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="current_account", type="string", length=45, nullable=true)
+     */
+    private $currentAccount;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="current_account_code", type="string", length=45, nullable=true)
+     */
+    private $currentAccountCode;
+
+    /**
+     * @var \Member
+     *
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="member_id", referencedColumnName="id")
+     * })
+     */
+    private $member;
+
+
+}

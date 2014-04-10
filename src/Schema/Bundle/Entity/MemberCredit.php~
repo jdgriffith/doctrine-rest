@@ -1,0 +1,49 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * MemberCredit
+ *
+ * @ORM\Table(name="member_credit", indexes={@ORM\Index(name="fk_member_member_credit_idx", columns={"member_id"})})
+ * @ORM\Entity
+ */
+class MemberCredit
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime", nullable=true)
+     */
+    private $date;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="NOTES", type="string", length=250, nullable=true)
+     */
+    private $notes;
+
+    /**
+     * @var \Member
+     *
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="member_id", referencedColumnName="id")
+     * })
+     */
+    private $member;
+
+
+}

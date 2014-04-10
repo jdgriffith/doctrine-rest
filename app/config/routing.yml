@@ -1,0 +1,10 @@
+schema:
+    resource: "@SchemaBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+rest:
+    resource: "@RestBundle/Controller/"
+    type:     annotation
+    prefix:   /
+

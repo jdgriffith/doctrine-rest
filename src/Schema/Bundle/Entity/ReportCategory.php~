@@ -1,0 +1,39 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ReportCategory
+ *
+ * @ORM\Table(name="report_category")
+ * @ORM\Entity
+ */
+class ReportCategory
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="report_meta_id", type="integer", nullable=true)
+     */
+    private $reportMetaId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="report_category_list_id", type="integer", nullable=true)
+     */
+    private $reportCategoryListId;
+
+
+}

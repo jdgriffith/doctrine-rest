@@ -1,0 +1,143 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Local
+ *
+ * @ORM\Table(name="local", indexes={@ORM\Index(name="fk_region_local_idx", columns={"region_id"}), @ORM\Index(name="fk_payment_type_local_idx", columns={"payment_type_id"}), @ORM\Index(name="fk_employee_type_local_idx", columns={"employee_type_id"}), @ORM\Index(name="fk_charter_type_idx", columns={"charter_type_id"})})
+ * @ORM\Entity
+ */
+class Local
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=45, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="bargaining", type="boolean", nullable=true)
+     */
+    private $bargaining;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_affiliate_local", type="boolean", nullable=true)
+     */
+    private $isAffiliateLocal;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=100, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="association_name", type="string", length=50, nullable=true)
+     */
+    private $associationName;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="civil_service", type="boolean", nullable=true)
+     */
+    private $civilService;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="meet_confer", type="boolean", nullable=true)
+     */
+    private $meetConfer;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="notes", type="text", nullable=true)
+     */
+    private $notes;
+
+    /**
+     * @var \CharterType
+     *
+     * @ORM\ManyToOne(targetEntity="CharterType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="charter_type_id", referencedColumnName="id")
+     * })
+     */
+    private $charterType;
+
+    /**
+     * @var \EmployeeType
+     *
+     * @ORM\ManyToOne(targetEntity="EmployeeType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="employee_type_id", referencedColumnName="id")
+     * })
+     */
+    private $employeeType;
+
+    /**
+     * @var \PaymentType
+     *
+     * @ORM\ManyToOne(targetEntity="PaymentType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="payment_type_id", referencedColumnName="id")
+     * })
+     */
+    private $paymentType;
+
+    /**
+     * @var \Region
+     *
+     * @ORM\ManyToOne(targetEntity="Region")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="region_id", referencedColumnName="id")
+     * })
+     */
+    private $region;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="LocalGroup", mappedBy="local")
+     */
+    private $localGroup;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Statement", mappedBy="local")
+     */
+    private $statement;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->localGroup = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->statement = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+}

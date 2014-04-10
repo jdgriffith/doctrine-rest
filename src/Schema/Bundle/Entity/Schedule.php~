@@ -1,0 +1,84 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Schedule
+ *
+ * @ORM\Table(name="schedule", indexes={@ORM\Index(name="fk_schedule_type_schedule_idx", columns={"schedule_type_id"})})
+ * @ORM\Entity
+ */
+class Schedule
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=45, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="time", type="string", length=255, nullable=true)
+     */
+    private $time;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_recurring", type="boolean", nullable=false)
+     */
+    private $isRecurring;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="start_from", type="datetime", nullable=false)
+     */
+    private $startFrom;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="end_at", type="datetime", nullable=true)
+     */
+    private $endAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="last_scheduled_at", type="datetime", nullable=true)
+     */
+    private $lastScheduledAt;
+
+    /**
+     * @var \ScheduleType
+     *
+     * @ORM\ManyToOne(targetEntity="ScheduleType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="schedule_type_id", referencedColumnName="id")
+     * })
+     */
+    private $scheduleType;
+
+
+}

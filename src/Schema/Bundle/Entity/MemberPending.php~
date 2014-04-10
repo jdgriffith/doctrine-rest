@@ -1,0 +1,56 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * MemberPending
+ *
+ * @ORM\Table(name="member_pending", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_6B21CD2D7597D3FE", columns={"member_id"})})
+ * @ORM\Entity
+ */
+class MemberPending
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="activity_date", type="datetime", nullable=true)
+     */
+    private $activityDate;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="accepted", type="boolean", nullable=true)
+     */
+    private $accepted;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="rejected", type="boolean", nullable=true)
+     */
+    private $rejected;
+
+    /**
+     * @var \Member
+     *
+     * @ORM\ManyToOne(targetEntity="Member")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="member_id", referencedColumnName="id")
+     * })
+     */
+    private $member;
+
+
+}

@@ -1,0 +1,66 @@
+<?php
+
+namespace Schema\Bundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * LegalCharge
+ *
+ * @ORM\Table(name="legal_charge", indexes={@ORM\Index(name="fk_legal_case_legal_charge_idx", columns={"legal_case_id"}), @ORM\Index(name="IDX_B95D7E4F4C19F89F", columns={"lawyer_id"})})
+ * @ORM\Entity
+ */
+class LegalCharge
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="charge_date", type="datetime", nullable=true)
+     */
+    private $chargeDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="amount", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $amount;
+
+    /**
+     * @var \Lawyer
+     *
+     * @ORM\ManyToOne(targetEntity="Lawyer")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="lawyer_id", referencedColumnName="id")
+     * })
+     */
+    private $lawyer;
+
+    /**
+     * @var \LegalCase
+     *
+     * @ORM\ManyToOne(targetEntity="LegalCase")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="legal_case_id", referencedColumnName="id")
+     * })
+     */
+    private $legalCase;
+
+
+}
