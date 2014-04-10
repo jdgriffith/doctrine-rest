@@ -8,6 +8,7 @@
   use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
   use Symfony\Component\HttpFoundation\JsonResponse;
   use Symfony\Component\HttpFoundation\Response;
+  use Symfony\Component\HttpFoundation\Request;
 
   use Doctrine\ORM\Mapping\ClassMetadata;
   use Doctrine\ORM\Mapping\Driver\DatabaseDriver;
@@ -45,14 +46,19 @@
      * @param $resource
      * @return \Symfony\Component\HttpFoundation\Response|static
      */
-    public function getCollectionAction($resource)
+    public function getCollectionAction(Request $request, $resource)
     {
+      $limit = $request->get("limit");
+      $offset = $request->get("offset");
 
-      $entity = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->findAll();
+      if (!empty($limit) AND !empty($offset)) {
+        $entities = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->findBy([], [], $limit, $offset);
+      }
+      else {
+        $entities = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->findAll();
+      }
 
-
-      return JsonResponse::create($entity);
-
+      return JsonResponse::create($this->serialize($entities));
     }
 
 
@@ -84,7 +90,7 @@
      * @param $resource
      * @param $id
      */
-    public function postAction($resource)
+    public function postAction(Request $request, $resource)
     {
       //$entity = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->find($id);
 
@@ -99,7 +105,7 @@
      * @param $resource
      * @param $id
      */
-    public function putAction($resource, $id)
+    public function putAction(Request $request, $resource, $id)
     {
       $entity = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->find($id);
 
@@ -131,16 +137,21 @@
     public function filter($entity)
     {
 
-      $exclusion = $this->container->getParameter("");
-
       return $entity;
     }
-
-
 
     private function serialize($entity, $format = 'json') {
 
       $serializer = $this->container->get('serializer');
+
+      if (is_array($entity)) {
+        $entities = $entity;
+        foreach($entities as $key => $entity) {
+          $entities[$key] = json_decode($serializer->serialize($entity, $format));
+        }
+
+        return $entities;
+      }
 
       return json_decode($serializer->serialize($entity, $format));
 
