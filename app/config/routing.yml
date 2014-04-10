@@ -8,3 +8,7 @@ rest:
     type:     annotation
     prefix:   /
 
+oauth2_server:
+    resource: "@OAuth2ServerBundle/Controller/"
+    type:     annotation
+    prefix:   /

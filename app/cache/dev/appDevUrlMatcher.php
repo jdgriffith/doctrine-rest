@@ -140,62 +140,100 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
             return $this->mergeDefaults(array_replace($matches, array('_route' => 'schema__default_index')), array (  '_controller' => 'Schema\\Bundle\\Controller\\DefaultController::indexAction',));
         }
 
-        if (0 === strpos($pathinfo, '/api')) {
-            // rest__default_getcollection
-            if (preg_match('#^/api/(?P<resource>[^/]++)$#s', $pathinfo, $matches)) {
-                if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
-                    $allow = array_merge($allow, array('GET', 'HEAD'));
-                    goto not_rest__default_getcollection;
+        if (0 === strpos($pathinfo, '/a')) {
+            if (0 === strpos($pathinfo, '/api')) {
+                // rest__default_getcollection
+                if (preg_match('#^/api/(?P<resource>[^/]++)$#s', $pathinfo, $matches)) {
+                    if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                        $allow = array_merge($allow, array('GET', 'HEAD'));
+                        goto not_rest__default_getcollection;
+                    }
+
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'rest__default_getcollection')), array (  '_controller' => 'Rest\\Bundle\\Controller\\DefaultController::getCollectionAction',));
                 }
+                not_rest__default_getcollection:
 
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'rest__default_getcollection')), array (  '_controller' => 'Rest\\Bundle\\Controller\\DefaultController::getCollectionAction',));
-            }
-            not_rest__default_getcollection:
+                // rest__default_get
+                if (preg_match('#^/api/(?P<resource>[^/]++)/(?P<id>\\d+)$#s', $pathinfo, $matches)) {
+                    if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                        $allow = array_merge($allow, array('GET', 'HEAD'));
+                        goto not_rest__default_get;
+                    }
 
-            // rest__default_get
-            if (preg_match('#^/api/(?P<resource>[^/]++)/(?P<id>\\d+)$#s', $pathinfo, $matches)) {
-                if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
-                    $allow = array_merge($allow, array('GET', 'HEAD'));
-                    goto not_rest__default_get;
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'rest__default_get')), array (  '_controller' => 'Rest\\Bundle\\Controller\\DefaultController::getAction',));
                 }
+                not_rest__default_get:
 
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'rest__default_get')), array (  '_controller' => 'Rest\\Bundle\\Controller\\DefaultController::getAction',));
-            }
-            not_rest__default_get:
+                // rest__default_post
+                if (preg_match('#^/api/(?P<resource>[^/]++)$#s', $pathinfo, $matches)) {
+                    if ($this->context->getMethod() != 'POST') {
+                        $allow[] = 'POST';
+                        goto not_rest__default_post;
+                    }
 
-            // rest__default_post
-            if (preg_match('#^/api/(?P<resource>[^/]++)$#s', $pathinfo, $matches)) {
-                if ($this->context->getMethod() != 'POST') {
-                    $allow[] = 'POST';
-                    goto not_rest__default_post;
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'rest__default_post')), array (  '_controller' => 'Rest\\Bundle\\Controller\\DefaultController::postAction',));
                 }
+                not_rest__default_post:
 
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'rest__default_post')), array (  '_controller' => 'Rest\\Bundle\\Controller\\DefaultController::postAction',));
-            }
-            not_rest__default_post:
+                // rest__default_put
+                if (preg_match('#^/api/(?P<resource>[^/]++)/(?P<id>\\d+)$#s', $pathinfo, $matches)) {
+                    if (!in_array($this->context->getMethod(), array('PUT', 'PATCH'))) {
+                        $allow = array_merge($allow, array('PUT', 'PATCH'));
+                        goto not_rest__default_put;
+                    }
 
-            // rest__default_put
-            if (preg_match('#^/api/(?P<resource>[^/]++)/(?P<id>\\d+)$#s', $pathinfo, $matches)) {
-                if (!in_array($this->context->getMethod(), array('PUT', 'PATCH'))) {
-                    $allow = array_merge($allow, array('PUT', 'PATCH'));
-                    goto not_rest__default_put;
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'rest__default_put')), array (  '_controller' => 'Rest\\Bundle\\Controller\\DefaultController::putAction',));
                 }
+                not_rest__default_put:
 
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'rest__default_put')), array (  '_controller' => 'Rest\\Bundle\\Controller\\DefaultController::putAction',));
-            }
-            not_rest__default_put:
+                // rest__default_delete
+                if (preg_match('#^/api/(?P<resource>[^/]++)/(?P<id>\\d+)$#s', $pathinfo, $matches)) {
+                    if ($this->context->getMethod() != 'DELETE') {
+                        $allow[] = 'DELETE';
+                        goto not_rest__default_delete;
+                    }
 
-            // rest__default_delete
-            if (preg_match('#^/api/(?P<resource>[^/]++)/(?P<id>\\d+)$#s', $pathinfo, $matches)) {
-                if ($this->context->getMethod() != 'DELETE') {
-                    $allow[] = 'DELETE';
-                    goto not_rest__default_delete;
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => 'rest__default_delete')), array (  '_controller' => 'Rest\\Bundle\\Controller\\DefaultController::deleteAction',));
                 }
+                not_rest__default_delete:
 
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'rest__default_delete')), array (  '_controller' => 'Rest\\Bundle\\Controller\\DefaultController::deleteAction',));
             }
-            not_rest__default_delete:
 
+            if (0 === strpos($pathinfo, '/authorize')) {
+                // _authorize_validate
+                if ($pathinfo === '/authorize') {
+                    if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                        $allow = array_merge($allow, array('GET', 'HEAD'));
+                        goto not__authorize_validate;
+                    }
+
+                    return array (  '_controller' => 'OAuth2\\ServerBundle\\Controller\\AuthorizeController::validateAuthorizeAction',  '_route' => '_authorize_validate',);
+                }
+                not__authorize_validate:
+
+                // _authorize_handle
+                if ($pathinfo === '/authorize') {
+                    if ($this->context->getMethod() != 'POST') {
+                        $allow[] = 'POST';
+                        goto not__authorize_handle;
+                    }
+
+                    return array (  '_controller' => 'OAuth2\\ServerBundle\\Controller\\AuthorizeController::handleAuthorizeAction',  '_route' => '_authorize_handle',);
+                }
+                not__authorize_handle:
+
+            }
+
+        }
+
+        // _token
+        if ($pathinfo === '/token') {
+            return array (  '_controller' => 'OAuth2\\ServerBundle\\Controller\\TokenController::tokenAction',  '_route' => '_token',);
+        }
+
+        // _verify_token
+        if ($pathinfo === '/verify') {
+            return array (  '_controller' => 'OAuth2\\ServerBundle\\Controller\\VerifyController::verifyAction',  '_route' => '_verify_token',);
         }
 
         throw 0 < count($allow) ? new MethodNotAllowedException(array_unique($allow)) : new ResourceNotFoundException();

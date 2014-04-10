@@ -16,6 +16,7 @@
       <parameter key="AsseticBundle">Symfony\Bundle\AsseticBundle\AsseticBundle</parameter>
       <parameter key="DoctrineBundle">Doctrine\Bundle\DoctrineBundle\DoctrineBundle</parameter>
       <parameter key="SensioFrameworkExtraBundle">Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle</parameter>
+      <parameter key="OAuth2ServerBundle">OAuth2\ServerBundle\OAuth2ServerBundle</parameter>
       <parameter key="RestBundle">Rest\Bundle\RestBundle</parameter>
       <parameter key="SchemaBundle">Schema\Bundle\SchemaBundle</parameter>
       <parameter key="JMSSerializerBundle">JMS\SerializerBundle\JMSSerializerBundle</parameter>
@@ -434,9 +435,9 @@
     <parameter key="assetic.write_to">/Users/justingriffith/Sites/doctrine-rest/app/../web</parameter>
     <parameter key="assetic.variables" type="collection"/>
     <parameter key="assetic.java.bin">/usr/bin/java</parameter>
-    <parameter key="assetic.node.bin">/usr/bin/node</parameter>
-    <parameter key="assetic.ruby.bin">/usr/bin/ruby</parameter>
-    <parameter key="assetic.sass.bin">/usr/bin/sass</parameter>
+    <parameter key="assetic.node.bin">/usr/local/bin/node</parameter>
+    <parameter key="assetic.ruby.bin">/usr/local/Cellar/ruby/1.9.3-p362/bin/ruby</parameter>
+    <parameter key="assetic.sass.bin">/usr/local/Cellar/ruby/1.9.3-p362/bin/sass</parameter>
     <parameter key="assetic.filter.cssrewrite.class">Assetic\Filter\CssRewriteFilter</parameter>
     <parameter key="assetic.twig_extension.functions" type="collection"/>
     <parameter key="assetic.controller.class">Symfony\Bundle\AsseticBundle\Controller\AsseticController</parameter>
@@ -515,6 +516,23 @@
     <parameter key="sensio_framework_extra.converter.doctrine.class">Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\DoctrineParamConverter</parameter>
     <parameter key="sensio_framework_extra.converter.datetime.class">Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\DateTimeParamConverter</parameter>
     <parameter key="sensio_framework_extra.view.listener.class">Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener</parameter>
+    <parameter key="oauth2.server.class">OAuth2\Server</parameter>
+    <parameter key="oauth2.request.class">OAuth2\HttpFoundationBridge\Request</parameter>
+    <parameter key="oauth2.request_factory.class">OAuth2\HttpFoundationBridge\Request</parameter>
+    <parameter key="oauth2.response.class">OAuth2\HttpFoundationBridge\Response</parameter>
+    <parameter key="oauth2.storage.client_credentials.class">OAuth2\ServerBundle\Storage\ClientCredentials</parameter>
+    <parameter key="oauth2.storage.access_token.class">OAuth2\ServerBundle\Storage\AccessToken</parameter>
+    <parameter key="oauth2.storage.authorization_code.class">OAuth2\ServerBundle\Storage\AuthorizationCode</parameter>
+    <parameter key="oauth2.storage.user_credentials.class">OAuth2\ServerBundle\Storage\UserCredentials</parameter>
+    <parameter key="oauth2.storage.refresh_token.class">OAuth2\ServerBundle\Storage\RefreshToken</parameter>
+    <parameter key="oauth2.storage.scope.class">OAuth2\ServerBundle\Storage\Scope</parameter>
+    <parameter key="oauth2.grant_type.client_credentials.class">OAuth2\GrantType\ClientCredentials</parameter>
+    <parameter key="oauth2.grant_type.authorization_code.class">OAuth2\GrantType\AuthorizationCode</parameter>
+    <parameter key="oauth2.grant_type.refresh_token.class">OAuth2\GrantType\RefreshToken</parameter>
+    <parameter key="oauth2.grant_type.user_credentials.class">OAuth2\GrantType\UserCredentials</parameter>
+    <parameter key="oauth2.user_provider.class">OAuth2\ServerBundle\User\OAuth2UserProvider</parameter>
+    <parameter key="oauth2.client_manager.class">OAuth2\ServerBundle\Manager\ClientManager</parameter>
+    <parameter key="oauth2.scope_manager.class">OAuth2\ServerBundle\Manager\ScopeManager</parameter>
     <parameter key="jms_serializer.metadata.file_locator.class">Metadata\Driver\FileLocator</parameter>
     <parameter key="jms_serializer.metadata.annotation_driver.class">JMS\Serializer\Metadata\Driver\AnnotationDriver</parameter>
     <parameter key="jms_serializer.metadata.chain_driver.class">Metadata\Driver\DriverChain</parameter>
@@ -2354,6 +2372,7 @@
         <service class="Doctrine\ORM\Configuration" public="false">
           <call method="setEntityNamespaces">
             <argument type="collection">
+              <argument key="OAuth2ServerBundle">OAuth2\ServerBundle\Entity</argument>
               <argument key="SchemaBundle">Schema\Bundle\Entity</argument>
             </argument>
           </call>
@@ -2387,6 +2406,19 @@
           <call method="setMetadataDriverImpl">
             <argument type="service">
               <service class="Doctrine\ORM\Mapping\Driver\DriverChain" public="false">
+                <call method="addDriver">
+                  <argument type="service">
+                    <service class="Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver" public="false">
+                      <argument type="collection">
+                        <argument key="/Users/justingriffith/Sites/doctrine-rest/vendor/bshaffer/oauth2-server-bundle/OAuth2/ServerBundle/Resources/config/doctrine">OAuth2\ServerBundle\Entity</argument>
+                      </argument>
+                      <call method="setGlobalBasename">
+                        <argument>mapping</argument>
+                      </call>
+                    </service>
+                  </argument>
+                  <argument>OAuth2\ServerBundle\Entity</argument>
+                </call>
                 <call method="addDriver">
                   <argument type="service">
                     <service class="Doctrine\ORM\Mapping\Driver\AnnotationDriver" public="false">
@@ -2470,6 +2502,65 @@
       </argument>
       <argument type="service" id="security.authentication.trust_resolver" on-invalid="null"/>
       <argument type="service" id="security.role_hierarchy" on-invalid="null"/>
+    </service>
+    <service id="oauth2.server" class="OAuth2\Server">
+      <argument key="storage" type="collection">
+        <argument type="service" id="oauth2.storage.client_credentials"/>
+        <argument type="service" id="oauth2.storage.access_token"/>
+        <argument type="service" id="oauth2.storage.authorization_code"/>
+        <argument type="service" id="oauth2.storage.user_credentials"/>
+        <argument type="service" id="oauth2.storage.refresh_token"/>
+        <argument type="service" id="oauth2.storage.scope"/>
+      </argument>
+    </service>
+    <service id="oauth2.request" class="OAuth2\HttpFoundationBridge\Request" factory-method="createFromRequest" scope="request">
+      <argument type="service" id="request"/>
+    </service>
+    <service id="oauth2.response" class="OAuth2\HttpFoundationBridge\Response"/>
+    <service id="oauth2.user_provider" class="OAuth2\ServerBundle\User\OAuth2UserProvider">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="security.encoder_factory"/>
+    </service>
+    <service id="oauth2.storage.client_credentials" class="OAuth2\ServerBundle\Storage\ClientCredentials">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
+    <service id="oauth2.storage.authorization_code" class="OAuth2\ServerBundle\Storage\AuthorizationCode">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
+    <service id="oauth2.storage.user_credentials" class="OAuth2\ServerBundle\Storage\UserCredentials">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+      <argument type="service" id="oauth2.user_provider"/>
+      <argument type="service" id="security.encoder_factory"/>
+    </service>
+    <service id="oauth2.storage.access_token" class="OAuth2\ServerBundle\Storage\AccessToken">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
+    <service id="oauth2.storage.refresh_token" class="OAuth2\ServerBundle\Storage\RefreshToken">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
+    <service id="oauth2.storage.scope" class="OAuth2\ServerBundle\Storage\Scope">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
+    <service id="oauth2.grant_type.client_credentials" class="OAuth2\GrantType\ClientCredentials">
+      <argument type="service" id="oauth2.storage.client_credentials"/>
+    </service>
+    <service id="oauth2.grant_type.authorization_code" class="OAuth2\GrantType\AuthorizationCode">
+      <argument type="service" id="oauth2.storage.authorization_code"/>
+    </service>
+    <service id="oauth2.grant_type.user_credentials" class="OAuth2\GrantType\UserCredentials">
+      <argument type="service" id="oauth2.storage.user_credentials"/>
+    </service>
+    <service id="oauth2.grant_type.refresh_token" class="OAuth2\GrantType\RefreshToken">
+      <argument type="service" id="oauth2.storage.refresh_token"/>
+      <argument type="collection">
+        <argument key="always_issue_new_refresh_token">false</argument>
+      </argument>
+    </service>
+    <service id="oauth2.client_manager" class="OAuth2\ServerBundle\Manager\ClientManager">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
+    <service id="oauth2.scope_manager" class="OAuth2\ServerBundle\Manager\ScopeManager">
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
     </service>
     <service id="jms_serializer.doctrine_proxy_subscriber" class="JMS\Serializer\EventDispatcher\Subscriber\DoctrineProxySubscriber">
       <tag name="jms_serializer.event_subscriber"/>
@@ -3130,6 +3221,10 @@
         <argument>Doctrine</argument>
       </call>
       <call method="addPath">
+        <argument>/Users/justingriffith/Sites/doctrine-rest/vendor/bshaffer/oauth2-server-bundle/OAuth2/ServerBundle/Resources/views</argument>
+        <argument>OAuth2Server</argument>
+      </call>
+      <call method="addPath">
         <argument>/Users/justingriffith/Sites/doctrine-rest/src/Rest/Bundle/Resources/views</argument>
         <argument>Rest</argument>
       </call>
@@ -3240,6 +3335,7 @@
                       <argument key="Symfony\Bundle\AsseticBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/assetic-bundle/Symfony/Bundle/AsseticBundle/Resources/config/serializer</argument>
                       <argument key="Doctrine\Bundle\DoctrineBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/config/serializer</argument>
                       <argument key="Sensio\Bundle\FrameworkExtraBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/sensio/framework-extra-bundle/Sensio/Bundle/FrameworkExtraBundle/Resources/config/serializer</argument>
+                      <argument key="OAuth2\ServerBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/bshaffer/oauth2-server-bundle/OAuth2/ServerBundle/Resources/config/serializer</argument>
                       <argument key="Rest\Bundle">/Users/justingriffith/Sites/doctrine-rest/src/Rest/Bundle/Resources/config/serializer</argument>
                       <argument key="Schema\Bundle">/Users/justingriffith/Sites/doctrine-rest/src/Schema/Bundle/Resources/config/serializer</argument>
                       <argument key="JMS\SerializerBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer</argument>
@@ -3264,6 +3360,7 @@
                       <argument key="Symfony\Bundle\AsseticBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/assetic-bundle/Symfony/Bundle/AsseticBundle/Resources/config/serializer</argument>
                       <argument key="Doctrine\Bundle\DoctrineBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/config/serializer</argument>
                       <argument key="Sensio\Bundle\FrameworkExtraBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/sensio/framework-extra-bundle/Sensio/Bundle/FrameworkExtraBundle/Resources/config/serializer</argument>
+                      <argument key="OAuth2\ServerBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/bshaffer/oauth2-server-bundle/OAuth2/ServerBundle/Resources/config/serializer</argument>
                       <argument key="Rest\Bundle">/Users/justingriffith/Sites/doctrine-rest/src/Rest/Bundle/Resources/config/serializer</argument>
                       <argument key="Schema\Bundle">/Users/justingriffith/Sites/doctrine-rest/src/Schema/Bundle/Resources/config/serializer</argument>
                       <argument key="JMS\SerializerBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer</argument>
@@ -3288,6 +3385,7 @@
                       <argument key="Symfony\Bundle\AsseticBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/assetic-bundle/Symfony/Bundle/AsseticBundle/Resources/config/serializer</argument>
                       <argument key="Doctrine\Bundle\DoctrineBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/config/serializer</argument>
                       <argument key="Sensio\Bundle\FrameworkExtraBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/sensio/framework-extra-bundle/Sensio/Bundle/FrameworkExtraBundle/Resources/config/serializer</argument>
+                      <argument key="OAuth2\ServerBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/bshaffer/oauth2-server-bundle/OAuth2/ServerBundle/Resources/config/serializer</argument>
                       <argument key="Rest\Bundle">/Users/justingriffith/Sites/doctrine-rest/src/Rest/Bundle/Resources/config/serializer</argument>
                       <argument key="Schema\Bundle">/Users/justingriffith/Sites/doctrine-rest/src/Schema/Bundle/Resources/config/serializer</argument>
                       <argument key="JMS\SerializerBundle">/Users/justingriffith/Sites/doctrine-rest/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer</argument>

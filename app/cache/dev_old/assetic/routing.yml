@@ -1,5 +1,0 @@
-_assetic:
-    resource: .
-    type: assetic
-_app:
-    resource: /Users/justingriffith/Sites/doctrine-rest/app/config/routing_dev.yml

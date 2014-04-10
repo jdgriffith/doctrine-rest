@@ -147,6 +147,22 @@ class appDevDebugProjectContainer extends Container
             'monolog.logger.router' => 'getMonolog_Logger_RouterService',
             'monolog.logger.security' => 'getMonolog_Logger_SecurityService',
             'monolog.logger.templating' => 'getMonolog_Logger_TemplatingService',
+            'oauth2.client_manager' => 'getOauth2_ClientManagerService',
+            'oauth2.grant_type.authorization_code' => 'getOauth2_GrantType_AuthorizationCodeService',
+            'oauth2.grant_type.client_credentials' => 'getOauth2_GrantType_ClientCredentialsService',
+            'oauth2.grant_type.refresh_token' => 'getOauth2_GrantType_RefreshTokenService',
+            'oauth2.grant_type.user_credentials' => 'getOauth2_GrantType_UserCredentialsService',
+            'oauth2.request' => 'getOauth2_RequestService',
+            'oauth2.response' => 'getOauth2_ResponseService',
+            'oauth2.scope_manager' => 'getOauth2_ScopeManagerService',
+            'oauth2.server' => 'getOauth2_ServerService',
+            'oauth2.storage.access_token' => 'getOauth2_Storage_AccessTokenService',
+            'oauth2.storage.authorization_code' => 'getOauth2_Storage_AuthorizationCodeService',
+            'oauth2.storage.client_credentials' => 'getOauth2_Storage_ClientCredentialsService',
+            'oauth2.storage.refresh_token' => 'getOauth2_Storage_RefreshTokenService',
+            'oauth2.storage.scope' => 'getOauth2_Storage_ScopeService',
+            'oauth2.storage.user_credentials' => 'getOauth2_Storage_UserCredentialsService',
+            'oauth2.user_provider' => 'getOauth2_UserProviderService',
             'profiler' => 'getProfilerService',
             'profiler_listener' => 'getProfilerListenerService',
             'property_accessor' => 'getPropertyAccessorService',
@@ -616,23 +632,27 @@ class appDevDebugProjectContainer extends Container
         $c = new \Doctrine\Common\Cache\ArrayCache();
         $c->setNamespace('sf2orm_default_cb39dbca119aeaf01325713f069a1d598dc2f5cfd36e5b19b97e126279923e91');
 
-        $d = new \Doctrine\ORM\Mapping\Driver\DriverChain();
-        $d->addDriver(new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->get('annotation_reader'), array(0 => '/Users/justingriffith/Sites/doctrine-rest/src/Schema/Bundle/Entity')), 'Schema\\Bundle\\Entity');
+        $d = new \Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver(array('/Users/justingriffith/Sites/doctrine-rest/vendor/bshaffer/oauth2-server-bundle/OAuth2/ServerBundle/Resources/config/doctrine' => 'OAuth2\\ServerBundle\\Entity'));
+        $d->setGlobalBasename('mapping');
 
-        $e = new \Doctrine\ORM\Configuration();
-        $e->setEntityNamespaces(array('SchemaBundle' => 'Schema\\Bundle\\Entity'));
-        $e->setMetadataCacheImpl($a);
-        $e->setQueryCacheImpl($b);
-        $e->setResultCacheImpl($c);
-        $e->setMetadataDriverImpl($d);
-        $e->setProxyDir('/Users/justingriffith/Sites/doctrine-rest/app/cache/dev/doctrine/orm/Proxies');
-        $e->setProxyNamespace('Proxies');
-        $e->setAutoGenerateProxyClasses(true);
-        $e->setClassMetadataFactoryName('Doctrine\\ORM\\Mapping\\ClassMetadataFactory');
-        $e->setDefaultRepositoryClassName('Doctrine\\ORM\\EntityRepository');
-        $e->setNamingStrategy(new \Doctrine\ORM\Mapping\DefaultNamingStrategy());
+        $e = new \Doctrine\ORM\Mapping\Driver\DriverChain();
+        $e->addDriver($d, 'OAuth2\\ServerBundle\\Entity');
+        $e->addDriver(new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->get('annotation_reader'), array(0 => '/Users/justingriffith/Sites/doctrine-rest/src/Schema/Bundle/Entity')), 'Schema\\Bundle\\Entity');
 
-        $this->services['doctrine.orm.default_entity_manager'] = $instance = call_user_func(array('Doctrine\\ORM\\EntityManager', 'create'), $this->get('doctrine.dbal.default_connection'), $e);
+        $f = new \Doctrine\ORM\Configuration();
+        $f->setEntityNamespaces(array('OAuth2ServerBundle' => 'OAuth2\\ServerBundle\\Entity', 'SchemaBundle' => 'Schema\\Bundle\\Entity'));
+        $f->setMetadataCacheImpl($a);
+        $f->setQueryCacheImpl($b);
+        $f->setResultCacheImpl($c);
+        $f->setMetadataDriverImpl($e);
+        $f->setProxyDir('/Users/justingriffith/Sites/doctrine-rest/app/cache/dev/doctrine/orm/Proxies');
+        $f->setProxyNamespace('Proxies');
+        $f->setAutoGenerateProxyClasses(true);
+        $f->setClassMetadataFactoryName('Doctrine\\ORM\\Mapping\\ClassMetadataFactory');
+        $f->setDefaultRepositoryClassName('Doctrine\\ORM\\EntityRepository');
+        $f->setNamingStrategy(new \Doctrine\ORM\Mapping\DefaultNamingStrategy());
+
+        $this->services['doctrine.orm.default_entity_manager'] = $instance = call_user_func(array('Doctrine\\ORM\\EntityManager', 'create'), $this->get('doctrine.dbal.default_connection'), $f);
 
         $this->get('doctrine.orm.default_manager_configurator')->configure($instance);
 
@@ -1496,7 +1516,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getJmsSerializer_MetadataDriverService()
     {
-        $a = new \Metadata\Driver\FileLocator(array('Symfony\\Bundle\\FrameworkBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/serializer', 'Symfony\\Bundle\\SecurityBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/config/serializer', 'Symfony\\Bundle\\TwigBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/config/serializer', 'Symfony\\Bundle\\MonologBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/monolog-bundle/Symfony/Bundle/MonologBundle/Resources/config/serializer', 'Symfony\\Bundle\\SwiftmailerBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/swiftmailer-bundle/Symfony/Bundle/SwiftmailerBundle/Resources/config/serializer', 'Symfony\\Bundle\\AsseticBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/assetic-bundle/Symfony/Bundle/AsseticBundle/Resources/config/serializer', 'Doctrine\\Bundle\\DoctrineBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/config/serializer', 'Sensio\\Bundle\\FrameworkExtraBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/sensio/framework-extra-bundle/Sensio/Bundle/FrameworkExtraBundle/Resources/config/serializer', 'Rest\\Bundle' => '/Users/justingriffith/Sites/doctrine-rest/src/Rest/Bundle/Resources/config/serializer', 'Schema\\Bundle' => '/Users/justingriffith/Sites/doctrine-rest/src/Schema/Bundle/Resources/config/serializer', 'JMS\\SerializerBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer', 'Symfony\\Bundle\\WebProfilerBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/symfony/src/Symfony/Bundle/WebProfilerBundle/Resources/config/serializer', 'Sensio\\Bundle\\DistributionBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/config/serializer', 'Sensio\\Bundle\\GeneratorBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/sensio/generator-bundle/Sensio/Bundle/GeneratorBundle/Resources/config/serializer'));
+        $a = new \Metadata\Driver\FileLocator(array('Symfony\\Bundle\\FrameworkBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/serializer', 'Symfony\\Bundle\\SecurityBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/config/serializer', 'Symfony\\Bundle\\TwigBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/config/serializer', 'Symfony\\Bundle\\MonologBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/monolog-bundle/Symfony/Bundle/MonologBundle/Resources/config/serializer', 'Symfony\\Bundle\\SwiftmailerBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/swiftmailer-bundle/Symfony/Bundle/SwiftmailerBundle/Resources/config/serializer', 'Symfony\\Bundle\\AsseticBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/assetic-bundle/Symfony/Bundle/AsseticBundle/Resources/config/serializer', 'Doctrine\\Bundle\\DoctrineBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/config/serializer', 'Sensio\\Bundle\\FrameworkExtraBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/sensio/framework-extra-bundle/Sensio/Bundle/FrameworkExtraBundle/Resources/config/serializer', 'OAuth2\\ServerBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/bshaffer/oauth2-server-bundle/OAuth2/ServerBundle/Resources/config/serializer', 'Rest\\Bundle' => '/Users/justingriffith/Sites/doctrine-rest/src/Rest/Bundle/Resources/config/serializer', 'Schema\\Bundle' => '/Users/justingriffith/Sites/doctrine-rest/src/Schema/Bundle/Resources/config/serializer', 'JMS\\SerializerBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer', 'Symfony\\Bundle\\WebProfilerBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/symfony/src/Symfony/Bundle/WebProfilerBundle/Resources/config/serializer', 'Sensio\\Bundle\\DistributionBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/config/serializer', 'Sensio\\Bundle\\GeneratorBundle' => '/Users/justingriffith/Sites/doctrine-rest/vendor/sensio/generator-bundle/Sensio/Bundle/GeneratorBundle/Resources/config/serializer'));
 
         return $this->services['jms_serializer.metadata_driver'] = new \JMS\Serializer\Metadata\Driver\DoctrineTypeDriver(new \Metadata\Driver\DriverChain(array(0 => new \JMS\Serializer\Metadata\Driver\YamlDriver($a), 1 => new \JMS\Serializer\Metadata\Driver\XmlDriver($a), 2 => new \JMS\Serializer\Metadata\Driver\PhpDriver($a), 3 => new \JMS\Serializer\Metadata\Driver\AnnotationDriver($this->get('annotation_reader')))), $this->get('doctrine'));
     }
@@ -1862,6 +1882,220 @@ class appDevDebugProjectContainer extends Container
         $instance->pushHandler($this->get('monolog.handler.debug'));
 
         return $instance;
+    }
+
+    /**
+     * Gets the 'oauth2.client_manager' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\ServerBundle\Manager\ClientManager A OAuth2\ServerBundle\Manager\ClientManager instance.
+     */
+    protected function getOauth2_ClientManagerService()
+    {
+        return $this->services['oauth2.client_manager'] = new \OAuth2\ServerBundle\Manager\ClientManager($this->get('doctrine.orm.default_entity_manager'));
+    }
+
+    /**
+     * Gets the 'oauth2.grant_type.authorization_code' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\GrantType\AuthorizationCode A OAuth2\GrantType\AuthorizationCode instance.
+     */
+    protected function getOauth2_GrantType_AuthorizationCodeService()
+    {
+        return $this->services['oauth2.grant_type.authorization_code'] = new \OAuth2\GrantType\AuthorizationCode($this->get('oauth2.storage.authorization_code'));
+    }
+
+    /**
+     * Gets the 'oauth2.grant_type.client_credentials' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\GrantType\ClientCredentials A OAuth2\GrantType\ClientCredentials instance.
+     */
+    protected function getOauth2_GrantType_ClientCredentialsService()
+    {
+        return $this->services['oauth2.grant_type.client_credentials'] = new \OAuth2\GrantType\ClientCredentials($this->get('oauth2.storage.client_credentials'));
+    }
+
+    /**
+     * Gets the 'oauth2.grant_type.refresh_token' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\GrantType\RefreshToken A OAuth2\GrantType\RefreshToken instance.
+     */
+    protected function getOauth2_GrantType_RefreshTokenService()
+    {
+        return $this->services['oauth2.grant_type.refresh_token'] = new \OAuth2\GrantType\RefreshToken($this->get('oauth2.storage.refresh_token'), array('always_issue_new_refresh_token' => false));
+    }
+
+    /**
+     * Gets the 'oauth2.grant_type.user_credentials' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\GrantType\UserCredentials A OAuth2\GrantType\UserCredentials instance.
+     */
+    protected function getOauth2_GrantType_UserCredentialsService()
+    {
+        return $this->services['oauth2.grant_type.user_credentials'] = new \OAuth2\GrantType\UserCredentials($this->get('oauth2.storage.user_credentials'));
+    }
+
+    /**
+     * Gets the 'oauth2.request' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\HttpFoundationBridge\Request A OAuth2\HttpFoundationBridge\Request instance.
+     * 
+     * @throws InactiveScopeException when the 'oauth2.request' service is requested while the 'request' scope is not active
+     */
+    protected function getOauth2_RequestService()
+    {
+        if (!isset($this->scopedServices['request'])) {
+            throw new InactiveScopeException('oauth2.request', 'request');
+        }
+
+        return $this->services['oauth2.request'] = $this->scopedServices['request']['oauth2.request'] = call_user_func(array('OAuth2\\HttpFoundationBridge\\Request', 'createFromRequest'), $this->get('request'));
+    }
+
+    /**
+     * Gets the 'oauth2.response' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\HttpFoundationBridge\Response A OAuth2\HttpFoundationBridge\Response instance.
+     */
+    protected function getOauth2_ResponseService()
+    {
+        return $this->services['oauth2.response'] = new \OAuth2\HttpFoundationBridge\Response();
+    }
+
+    /**
+     * Gets the 'oauth2.scope_manager' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\ServerBundle\Manager\ScopeManager A OAuth2\ServerBundle\Manager\ScopeManager instance.
+     */
+    protected function getOauth2_ScopeManagerService()
+    {
+        return $this->services['oauth2.scope_manager'] = new \OAuth2\ServerBundle\Manager\ScopeManager($this->get('doctrine.orm.default_entity_manager'));
+    }
+
+    /**
+     * Gets the 'oauth2.server' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\Server A OAuth2\Server instance.
+     */
+    protected function getOauth2_ServerService()
+    {
+        return $this->services['oauth2.server'] = new \OAuth2\Server(array(0 => $this->get('oauth2.storage.client_credentials'), 1 => $this->get('oauth2.storage.access_token'), 2 => $this->get('oauth2.storage.authorization_code'), 3 => $this->get('oauth2.storage.user_credentials'), 4 => $this->get('oauth2.storage.refresh_token'), 5 => $this->get('oauth2.storage.scope')));
+    }
+
+    /**
+     * Gets the 'oauth2.storage.access_token' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\ServerBundle\Storage\AccessToken A OAuth2\ServerBundle\Storage\AccessToken instance.
+     */
+    protected function getOauth2_Storage_AccessTokenService()
+    {
+        return $this->services['oauth2.storage.access_token'] = new \OAuth2\ServerBundle\Storage\AccessToken($this->get('doctrine.orm.default_entity_manager'));
+    }
+
+    /**
+     * Gets the 'oauth2.storage.authorization_code' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\ServerBundle\Storage\AuthorizationCode A OAuth2\ServerBundle\Storage\AuthorizationCode instance.
+     */
+    protected function getOauth2_Storage_AuthorizationCodeService()
+    {
+        return $this->services['oauth2.storage.authorization_code'] = new \OAuth2\ServerBundle\Storage\AuthorizationCode($this->get('doctrine.orm.default_entity_manager'));
+    }
+
+    /**
+     * Gets the 'oauth2.storage.client_credentials' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\ServerBundle\Storage\ClientCredentials A OAuth2\ServerBundle\Storage\ClientCredentials instance.
+     */
+    protected function getOauth2_Storage_ClientCredentialsService()
+    {
+        return $this->services['oauth2.storage.client_credentials'] = new \OAuth2\ServerBundle\Storage\ClientCredentials($this->get('doctrine.orm.default_entity_manager'));
+    }
+
+    /**
+     * Gets the 'oauth2.storage.refresh_token' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\ServerBundle\Storage\RefreshToken A OAuth2\ServerBundle\Storage\RefreshToken instance.
+     */
+    protected function getOauth2_Storage_RefreshTokenService()
+    {
+        return $this->services['oauth2.storage.refresh_token'] = new \OAuth2\ServerBundle\Storage\RefreshToken($this->get('doctrine.orm.default_entity_manager'));
+    }
+
+    /**
+     * Gets the 'oauth2.storage.scope' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\ServerBundle\Storage\Scope A OAuth2\ServerBundle\Storage\Scope instance.
+     */
+    protected function getOauth2_Storage_ScopeService()
+    {
+        return $this->services['oauth2.storage.scope'] = new \OAuth2\ServerBundle\Storage\Scope($this->get('doctrine.orm.default_entity_manager'));
+    }
+
+    /**
+     * Gets the 'oauth2.storage.user_credentials' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\ServerBundle\Storage\UserCredentials A OAuth2\ServerBundle\Storage\UserCredentials instance.
+     */
+    protected function getOauth2_Storage_UserCredentialsService()
+    {
+        return $this->services['oauth2.storage.user_credentials'] = new \OAuth2\ServerBundle\Storage\UserCredentials($this->get('doctrine.orm.default_entity_manager'), $this->get('oauth2.user_provider'), $this->get('security.encoder_factory'));
+    }
+
+    /**
+     * Gets the 'oauth2.user_provider' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return OAuth2\ServerBundle\User\OAuth2UserProvider A OAuth2\ServerBundle\User\OAuth2UserProvider instance.
+     */
+    protected function getOauth2_UserProviderService()
+    {
+        return $this->services['oauth2.user_provider'] = new \OAuth2\ServerBundle\User\OAuth2UserProvider($this->get('doctrine.orm.default_entity_manager'), $this->get('security.encoder_factory'));
     }
 
     /**
@@ -3204,6 +3438,7 @@ class appDevDebugProjectContainer extends Container
         $instance->addPath('/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/views', 'Twig');
         $instance->addPath('/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/swiftmailer-bundle/Symfony/Bundle/SwiftmailerBundle/Resources/views', 'Swiftmailer');
         $instance->addPath('/Users/justingriffith/Sites/doctrine-rest/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/views', 'Doctrine');
+        $instance->addPath('/Users/justingriffith/Sites/doctrine-rest/vendor/bshaffer/oauth2-server-bundle/OAuth2/ServerBundle/Resources/views', 'OAuth2Server');
         $instance->addPath('/Users/justingriffith/Sites/doctrine-rest/src/Rest/Bundle/Resources/views', 'Rest');
         $instance->addPath('/Users/justingriffith/Sites/doctrine-rest/src/Schema/Bundle/Resources/views', 'Schema');
         $instance->addPath('/Users/justingriffith/Sites/doctrine-rest/vendor/symfony/symfony/src/Symfony/Bundle/WebProfilerBundle/Resources/views', 'WebProfiler');
@@ -3689,6 +3924,7 @@ class appDevDebugProjectContainer extends Container
                 'AsseticBundle' => 'Symfony\\Bundle\\AsseticBundle\\AsseticBundle',
                 'DoctrineBundle' => 'Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle',
                 'SensioFrameworkExtraBundle' => 'Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle',
+                'OAuth2ServerBundle' => 'OAuth2\\ServerBundle\\OAuth2ServerBundle',
                 'RestBundle' => 'Rest\\Bundle\\RestBundle',
                 'SchemaBundle' => 'Schema\\Bundle\\SchemaBundle',
                 'JMSSerializerBundle' => 'JMS\\SerializerBundle\\JMSSerializerBundle',
@@ -4125,9 +4361,9 @@ class appDevDebugProjectContainer extends Container
 
             ),
             'assetic.java.bin' => '/usr/bin/java',
-            'assetic.node.bin' => '/usr/bin/node',
-            'assetic.ruby.bin' => '/usr/bin/ruby',
-            'assetic.sass.bin' => '/usr/bin/sass',
+            'assetic.node.bin' => '/usr/local/bin/node',
+            'assetic.ruby.bin' => '/usr/local/Cellar/ruby/1.9.3-p362/bin/ruby',
+            'assetic.sass.bin' => '/usr/local/Cellar/ruby/1.9.3-p362/bin/sass',
             'assetic.filter.cssrewrite.class' => 'Assetic\\Filter\\CssRewriteFilter',
             'assetic.twig_extension.functions' => array(
 
@@ -4208,6 +4444,23 @@ class appDevDebugProjectContainer extends Container
             'sensio_framework_extra.converter.doctrine.class' => 'Sensio\\Bundle\\FrameworkExtraBundle\\Request\\ParamConverter\\DoctrineParamConverter',
             'sensio_framework_extra.converter.datetime.class' => 'Sensio\\Bundle\\FrameworkExtraBundle\\Request\\ParamConverter\\DateTimeParamConverter',
             'sensio_framework_extra.view.listener.class' => 'Sensio\\Bundle\\FrameworkExtraBundle\\EventListener\\TemplateListener',
+            'oauth2.server.class' => 'OAuth2\\Server',
+            'oauth2.request.class' => 'OAuth2\\HttpFoundationBridge\\Request',
+            'oauth2.request_factory.class' => 'OAuth2\\HttpFoundationBridge\\Request',
+            'oauth2.response.class' => 'OAuth2\\HttpFoundationBridge\\Response',
+            'oauth2.storage.client_credentials.class' => 'OAuth2\\ServerBundle\\Storage\\ClientCredentials',
+            'oauth2.storage.access_token.class' => 'OAuth2\\ServerBundle\\Storage\\AccessToken',
+            'oauth2.storage.authorization_code.class' => 'OAuth2\\ServerBundle\\Storage\\AuthorizationCode',
+            'oauth2.storage.user_credentials.class' => 'OAuth2\\ServerBundle\\Storage\\UserCredentials',
+            'oauth2.storage.refresh_token.class' => 'OAuth2\\ServerBundle\\Storage\\RefreshToken',
+            'oauth2.storage.scope.class' => 'OAuth2\\ServerBundle\\Storage\\Scope',
+            'oauth2.grant_type.client_credentials.class' => 'OAuth2\\GrantType\\ClientCredentials',
+            'oauth2.grant_type.authorization_code.class' => 'OAuth2\\GrantType\\AuthorizationCode',
+            'oauth2.grant_type.refresh_token.class' => 'OAuth2\\GrantType\\RefreshToken',
+            'oauth2.grant_type.user_credentials.class' => 'OAuth2\\GrantType\\UserCredentials',
+            'oauth2.user_provider.class' => 'OAuth2\\ServerBundle\\User\\OAuth2UserProvider',
+            'oauth2.client_manager.class' => 'OAuth2\\ServerBundle\\Manager\\ClientManager',
+            'oauth2.scope_manager.class' => 'OAuth2\\ServerBundle\\Manager\\ScopeManager',
             'jms_serializer.metadata.file_locator.class' => 'Metadata\\Driver\\FileLocator',
             'jms_serializer.metadata.annotation_driver.class' => 'JMS\\Serializer\\Metadata\\Driver\\AnnotationDriver',
             'jms_serializer.metadata.chain_driver.class' => 'Metadata\\Driver\\DriverChain',

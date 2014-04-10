@@ -36,7 +36,7 @@
     /**
      * Get resources
      *
-     * @Route("/{resource}")
+     * @Route("/{resource}", name="api_resource_collection")
      * @Method("GET")
      *
      * limit and offest for pagination
@@ -65,7 +65,7 @@
     /**
      * Get a specific resource and data
      *
-     * @Route("/{resource}/{id}", requirements={"id"="\d+"}))
+     * @Route("/{resource}/{id}", name="api_resource_get", requirements={"id"="\d+"}))
      * @Method("GET")
      *
      * @param $resource
@@ -84,7 +84,7 @@
     /**
      * Create a resource
      *
-     * @Route("/{resource}")
+     * @Route("/{resource}", name="api_resource_create")
      * @Method("POST")
      *
      * @param $resource
@@ -99,7 +99,7 @@
     /**
      * Update an existing resource
      *
-     * @Route("/{resource}/{id}", requirements={"id"="\d+"}))
+     * @Route("/{resource}/{id}", name="api_resource_update", requirements={"id"="\d+"}))
      * @Method({"PUT", "PATCH"})
      *
      * @param $resource
@@ -114,7 +114,7 @@
     /**
      * Delete an existing resource
      *
-     * @Route("/{resource}/{id}", requirements={"id"="\d+"}))
+     * @Route("/{resource}/{id}", name="api_resource_delete", requirements={"id"="\d+"}))
      * @Method("DELETE")
      *
      * @param $resource
