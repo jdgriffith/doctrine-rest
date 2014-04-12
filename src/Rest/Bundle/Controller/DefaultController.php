@@ -34,6 +34,7 @@
   {
 
     /**
+     *
      * Get resources
      *
      * @Route("/{resource}", name="api_resource_collection")
@@ -63,6 +64,7 @@
 
 
     /**
+     *
      * Get a specific resource and data
      *
      * @Route("/{resource}/{id}", name="api_resource_get", requirements={"id"="\d+"}))
@@ -82,6 +84,7 @@
     }
 
     /**
+     *
      * Create a resource
      *
      * @Route("/{resource}", name="api_resource_create")
@@ -97,6 +100,7 @@
     }
 
     /**
+     *
      * Update an existing resource
      *
      * @Route("/{resource}/{id}", name="api_resource_update", requirements={"id"="\d+"}))
@@ -112,6 +116,7 @@
     }
 
     /**
+     *
      * Delete an existing resource
      *
      * @Route("/{resource}/{id}", name="api_resource_delete", requirements={"id"="\d+"}))
@@ -136,6 +141,7 @@
 
     public function filter($entity)
     {
+
 
       return $entity;
     }
