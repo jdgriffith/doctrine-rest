@@ -1,0 +1,11 @@
+services:
+
+  metadata:
+     class: Rest\Bundle\Classes\ResourceManager
+     arguments: [@service_container]
+     lazy: true
+
+  valueobject:
+     class: Rest\Bundle\Classes\DoctrineValueObject
+     arguments: [@service_container, @doctrine.orm.entity_manager]
+     lazy: true

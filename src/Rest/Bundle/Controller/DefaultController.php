@@ -79,6 +79,11 @@
 
       $entity = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->find($id);
 
+      $metaManager = $this->container->get("valueobject");
+      $valueObject = $metaManager->getValueObject($entity);
+
+      die(var_dump($valueObject));
+
       return new JsonResponse($this->serialize($entity));
 
     }
