@@ -10,20 +10,9 @@
   use Symfony\Component\HttpFoundation\Response;
   use Symfony\Component\HttpFoundation\Request;
 
-  use Doctrine\ORM\Mapping\ClassMetadata;
-  use Doctrine\ORM\Mapping\Driver\DatabaseDriver;
-  use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
-  use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
-  use Doctrine\ORM\Tools\Console\MetadataFilter;
-
-  use Symfony\Component\Serializer\Serializer;
-  use Symfony\Component\Serializer\Encoder\XmlEncoder;
-  use Symfony\Component\Serializer\Encoder\JsonEncoder;
-  use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-
   use Rest\Bundle\Classes\ResourceManager;
-
   use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
   /**
    * Class DefaultController
@@ -32,8 +21,7 @@
    * @Route("/api")
    *
    */
-  class ResourceController extends Controller
-  {
+  class ResourceController extends Controller {
 
     /**
      *
@@ -49,24 +37,17 @@
      * @param $resource
      * @return \Symfony\Component\HttpFoundation\Response|static
      */
-    public function getCollectionAction(Request $request, $resource)
-    {
-      throw new NotFoundHttpException("Resource not found");
+    public function getCollectionAction(Request $request, $resource) {
 
+      $resourceManager = $this->_getResourceManager();
       $limit = $request->get("limit");
       $offset = $request->get("offset");
-      $repo = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->getRepository("SchemaBundle:$resource");
 
-      if (!empty($limit) AND !empty($offset)) {
-        $entities = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->findBy([], [], $limit, $offset);
-      }
-      else {
-        $entities = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->findAll();
-      }
+      $collection = $resourceManager->collection($resource, $limit, $offset);
 
-      return JsonResponse::create($this->serialize($entities));
+      return JsonResponse::create($resourceManager->serialize($collection));
+
     }
-
 
     /**
      *
@@ -79,17 +60,12 @@
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response|static
      */
-    public function getAction($resource, $id)
-    {
+    public function getAction($resource, $id) {
 
-      $entity = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->find($id);
+      $resourceManager = $this->_getResourceManager();
+      $entity = $resourceManager->get($resource, $id);
 
-      $metaManager = $this->container->get("valueobject");
-      $valueObject = $metaManager->getValueObject($entity);
-
-      die(var_dump($valueObject));
-
-      return new JsonResponse($this->serialize($entity));
+      return new JsonResponse($resourceManager->serialize($entity));
 
     }
 
@@ -103,10 +79,15 @@
      * @param $resource
      * @param $id
      */
-    public function postAction(Request $request, $resource)
-    {
-      //$entity = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->find($id);
+    public function postAction(Request $request, $resource) {
 
+      // Gather entity attributes and values
+      $params = $request->request->all();
+
+      $resourceManager = $this->_getResourceManager();
+      $entity = $resourceManager->create($resource, $params);
+
+      return new JsonResponse($resourceManager->serialize($entity));
     }
 
     /**
@@ -121,9 +102,15 @@
      *
      * @return JsonResponse
      */
-    public function putAction(Request $request, $resource, $id)
-    {
-      $entity = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->find($id);
+    public function putAction(Request $request, $resource, $id) {
+
+      // Gather entity attributes and values
+      $params = $request->request->all();
+
+      $resourceManager = $this->_getResourceManager();
+      $entity = $resourceManager->update($resource, $id, $params);
+
+      return new JsonResponse($resourceManager->serialize($entity));
 
     }
 
@@ -139,57 +126,24 @@
      *
      * @return JsonResponse
      */
-    public function deleteAction($resource, $id)
-    {
-      $em = $this->getDoctrine()->getManager();
-      $entity = $em->getRepository("SchemaBundle:$resource")->find($id);
-      $em->remove($entity);
-      $em->flush();
+    public function deleteAction($resource, $id) {
 
-      $response = new \stdClass();
-      $response->status = "Ok";
-      $response->message = "Entity was deleted.";
+      $resourceManager = $this->_getResourceManager();
+      $entity = $resourceManager->delete($resource, $id);
 
-      return new JsonResponse($response);
+      return new JsonResponse("$resource:$id has been deleted");
+
     }
 
-    public function getResourceMetaAction($resource) {
-
-      $response = new \stdClass();
-      $response->status = "OK";
-    }
-
-    public function filter($entity)
-    {
-
+    public function filter($entity) {
 
       return $entity;
     }
 
-    private function _serialize($entity, $format = 'json') {
+    private function _getResourceManager() {
 
-      $serializer = $this->container->get('serializer');
-
-      if (is_array($entity)) {
-        $entities = $entity;
-        foreach($entities as $key => $entity) {
-          $entities[$key] = json_decode($serializer->serialize($entity, $format));
-        }
-
-        return $entities;
-      }
-
-      return json_decode($serializer->serialize($entity, $format));
+      return $this->container->get("resource");
 
     }
 
-    private function _getRepository($resource) {
-
-      $repo = $this->getDoctrine()->getRepository("SchemaBundle:$resource");
-
-      if (!$repo) {
-
-      }
-
-    }
   }

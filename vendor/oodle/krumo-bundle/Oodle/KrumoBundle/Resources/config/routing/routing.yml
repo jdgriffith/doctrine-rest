@@ -1,4 +1,0 @@
-krumo:
-    resource: "@OodleKrumoBundle/Controller/KrumoController.php"
-    prefix: /
-    type: annotation
