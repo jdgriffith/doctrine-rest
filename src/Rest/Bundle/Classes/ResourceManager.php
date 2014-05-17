@@ -1,12 +1,5 @@
 <?php
 
-  /**
-   * Created by PhpStorm.
-   * User: justingriffith
-   * Date: 4/9/14
-   * Time: 3:01 PM
-   */
-
   namespace Rest\Bundle\Classes;
 
   use Doctrine\ORM\Mapping\ClassMetadata;
@@ -23,6 +16,10 @@
   use Doctrine\ORM\EntityManager;
   use Rest\Bundle\Classes\DoctrineValueObject;
 
+  /**
+   * Class ResourceManager
+   * @package Rest\Bundle\Classes
+   */
   class ResourceManager extends ContainerAware {
 
     private $meta = [];
@@ -42,6 +39,9 @@
 
     }
 
+    /**
+     * @return array
+     */
     private function _getAllMetaData() {
 
       $metadata = $this->cmf->getAllMetadata();
@@ -50,6 +50,10 @@
 
     }
 
+    /**
+     * @param $metadata
+     * @return array
+     */
     private function _transformMetaData($metadata) {
 
       $resources = [];
@@ -69,6 +73,10 @@
 
     }
 
+    /**
+     * @param $resource
+     * @return bool
+     */
     private function _resourceExists($resource) {
 
       if (class_exists("Schema\\Bundle\\Entity\\" . $resource)) {
@@ -79,6 +87,11 @@
 
     }
 
+    /**
+     * @param $resource
+     * @param string $limit
+     * @param string $offset
+     */
     public function collection($resource, $limit = '', $offset = '') {
 
       if (!empty($limit) AND !empty($offset)) {
@@ -95,14 +108,54 @@
 
     }
 
+    /**
+     * @param $resource
+     * @param array $params
+     * @return mixed
+     */
     public function create($resource, $params = []) {
 
+      $entityClass = "Schema\\Bundle\\Entity\\" . $resource;
+
+      $entity = new $entityClass();
+
+      foreach($params as $key => $value) {
+        $entity->{$key} = $value;
+      }
+
+      $this->em->persist($entity);
+      $this->em->flush();
+
+      return $entity;
+
     }
 
+    /**
+     * @param $resource
+     * @param $id
+     * @param array $params
+     * @return null|object
+     */
     public function update($resource, $id, $params = []) {
 
+      $entity = $this->get($resource, $id);
+
+      foreach($params as $key => $value) {
+        $entity->{$key} = $value;
+      }
+
+      $this->em->persist($entity);
+      $this->em->flush();
+
+      return $entity;
+
     }
 
+    /**
+     * @param $resource
+     * @param $id
+     * @param array $options
+     */
     public function delete($resource, $id, $options = []) {
 
       $entity = $this->get($resource, $id);
@@ -112,6 +165,10 @@
 
     }
 
+    /**
+     * @param $entity
+     * @return \stdClass
+     */
     public function getValueObject($entity) {
 
      return $this->valueObject->getValueObject($entity);
@@ -125,14 +182,15 @@
      */
     private function _getRepository($resource) {
 
-      if (!$this->_resourceExists($resource)) {
-        //throw new NotFoundHttpException("Resource not found");
-      }
-
       return $this->em->getRepository("SchemaBundle:$resource");
 
     }
 
+    /**
+     * @param $entity
+     * @param string $format
+     * @return array|mixed
+     */
     public function serialize($entity, $format = 'json') {
 
       // compensate for nested objects
