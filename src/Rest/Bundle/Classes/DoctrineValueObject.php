@@ -21,6 +21,10 @@ class DoctrineValueObject {
   private $class;
   private $meta;
 
+  /**
+   * @param ContainerInterface $container
+   * @param EntityManager $em
+   */
   public function __construct(ContainerInterface $container, EntityManager $em)
   {
     $this->container = $container;
@@ -31,12 +35,19 @@ class DoctrineValueObject {
 
   }
 
+  /**
+   * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata
+   */
   public function getMetaForClass() {
 
      return $this->meta = $this->cmf->getMetadataFor($this->class);
 
   }
 
+  /**
+   * @param $entity
+   * @return \Doctrine\Common\Persistence\Mapping\ClassMetadata
+   */
   public function getMetaForEntity($entity) {
 
     $this->entity = $entity;
@@ -48,6 +59,10 @@ class DoctrineValueObject {
 
   }
 
+  /**
+   * @param $entity
+   * @return \stdClass
+   */
   public function getValueObject($entity) {
 
     $this->entity = $entity;
@@ -62,6 +77,9 @@ class DoctrineValueObject {
 
   }
 
+  /**
+   * Build Field Mappings
+   */
   public function getFieldMappings() {
 
     foreach($this->meta->fieldMappings as $key => $field) {
@@ -73,6 +91,9 @@ class DoctrineValueObject {
 
   }
 
+  /**
+   * Build Association Mappings
+   */
   public function getAssociationMappings() {
 
     foreach($this->meta->associationMappings as $key => $assocation) {

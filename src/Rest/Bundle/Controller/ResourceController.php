@@ -23,6 +23,8 @@
 
   use Rest\Bundle\Classes\ResourceManager;
 
+  use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
   /**
    * Class DefaultController
    * @package Rest\Bundle\Controller
@@ -30,7 +32,7 @@
    * @Route("/api")
    *
    */
-  class DefaultController extends Controller
+  class ResourceController extends Controller
   {
 
     /**
@@ -49,8 +51,11 @@
      */
     public function getCollectionAction(Request $request, $resource)
     {
+      throw new NotFoundHttpException("Resource not found");
+
       $limit = $request->get("limit");
       $offset = $request->get("offset");
+      $repo = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->getRepository("SchemaBundle:$resource");
 
       if (!empty($limit) AND !empty($offset)) {
         $entities = $this->getDoctrine()->getRepository("SchemaBundle:$resource")->findBy([], [], $limit, $offset);
@@ -113,6 +118,8 @@
      *
      * @param $resource
      * @param $id
+     *
+     * @return JsonResponse
      */
     public function putAction(Request $request, $resource, $id)
     {
@@ -129,6 +136,8 @@
      *
      * @param $resource
      * @param $id
+     *
+     * @return JsonResponse
      */
     public function deleteAction($resource, $id)
     {
@@ -144,6 +153,12 @@
       return new JsonResponse($response);
     }
 
+    public function getResourceMetaAction($resource) {
+
+      $response = new \stdClass();
+      $response->status = "OK";
+    }
+
     public function filter($entity)
     {
 
@@ -151,7 +166,7 @@
       return $entity;
     }
 
-    private function serialize($entity, $format = 'json') {
+    private function _serialize($entity, $format = 'json') {
 
       $serializer = $this->container->get('serializer');
 
@@ -165,6 +180,16 @@
       }
 
       return json_decode($serializer->serialize($entity, $format));
+
+    }
+
+    private function _getRepository($resource) {
+
+      $repo = $this->getDoctrine()->getRepository("SchemaBundle:$resource");
+
+      if (!$repo) {
+
+      }
 
     }
   }
