@@ -27,6 +27,8 @@
   use Symfony\Component\Console\Input\InputInterface;
   use Symfony\Component\Console\Command\Command;
   use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+  use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+  use Doctrine\Bundle\DoctrineBundle\Mapping\DisconnectedMetadataFactory;
 
   /**
    * Command to generate repository classes for mapping information.
@@ -70,12 +72,15 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
       $em = $this->getContainer()->get('doctrine')->getManager();
+      $manager = new DisconnectedMetadataFactory($this->getContainer()->get('doctrine'));
 
       $metadatas = $em->getMetadataFactory()->getAllMetadata();
       $metadatas = MetadataFilter::filter($metadatas, $input->getOption('filter'));
 
       // Process destination directory
       $bundle = $this->getApplication()->getKernel()->getBundle($input->getArgument('bundle'));
+
+
 
       if (count($metadatas)) {
         $numRepositories = 0;
@@ -86,17 +91,26 @@ EOT
           // Get the simple name of the Entity
           $name = preg_replace("|^(.*\\\)|", "", $metadata->getName());
 
+          // Get path to original entity
+          $entityPath = $manager->getClassMetadata($metadata->getName(), null)->getPath() . "/" .  preg_replace
+            ("/\\\/", "/", $metadata->getName()) . ".php";
+          $repositoryPath = $bundle->getPath() . "/Repository/" . $name . "Repository.php";
+
           $metadata->setCustomRepositoryClass($bundle->getNamespace() . "\\Repository\\" . $name . "Repository");
 
-          if ($metadata->customRepositoryClassName) {
+          // notify entity via annotations to use custom repository class
+          $this->_addEntityAnnotation($entityPath, $metadata->customRepositoryClassName);
+
+          if ($metadata->customRepositoryClassName AND !$this->_repositoryClassExists($repositoryPath)) {
+
             $output->writeln(
               sprintf('Processing repository "<info>%s</info>"', $metadata->customRepositoryClassName)
             );
 
-            $generator->writeEntityRepositoryClass($metadata->customRepositoryClassName, "./src/"
-              /* $bundle->getPath() . "/Repository/"*/);
+            $generator->writeEntityRepositoryClass($metadata->customRepositoryClassName, "./src/");
 
             $numRepositories++;
+
           }
         }
 
@@ -111,4 +125,23 @@ EOT
         $output->writeln('No Metadata Classes to process.' );
       }
     }
+
+    private function _addEntityAnnotation($entityPath, $name) {
+
+      $contents = file_get_contents($entityPath);
+      $contents = preg_replace(["/(@ORM\\\Entity)\((.*)\)(.*)\n/m", "/(@ORM\\\Entity)(.*)\n/m"],
+        "$1(repositoryClass=\"$name\")\n",
+        $contents);
+      file_put_contents($entityPath, $contents);
+
+    }
+
+    private function _repositoryClassExists($path) {
+      if (file_exists($path)) {
+        return true;
+      }
+
+      return false;
+    }
+
   }
