@@ -48,8 +48,7 @@
     protected function configure()
     {
       $this
-        ->setName('orm:generate-repositories')
-        ->setAliases(array('orm:generate:repositories'))
+        ->setName('orm:generate:repositories')
         ->setDescription('Generate repository classes from your mapping information.')
         ->setDefinition(array(
           new InputOption(
@@ -79,8 +78,6 @@ EOT
 
       // Process destination directory
       $bundle = $this->getApplication()->getKernel()->getBundle($input->getArgument('bundle'));
-
-
 
       if (count($metadatas)) {
         $numRepositories = 0;
@@ -124,6 +121,7 @@ EOT
       } else {
         $output->writeln('No Metadata Classes to process.' );
       }
+
     }
 
     private function _addEntityAnnotation($entityPath, $name) {
@@ -137,11 +135,13 @@ EOT
     }
 
     private function _repositoryClassExists($path) {
+
       if (file_exists($path)) {
         return true;
       }
 
       return false;
+
     }
 
   }
