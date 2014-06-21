@@ -60,7 +60,7 @@
 
       foreach ($metadata as $key => $resource) {
 
-        $resources[$resource->name] = $resource;
+        $resources[strtolower($resource->name)] = $resource;
 
       }
 
