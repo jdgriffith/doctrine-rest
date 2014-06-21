@@ -1,6 +1,8 @@
 doctrine-rest
 =============
 
+[![Build Status](https://travis-ci.org/jdgriffith/doctrine-rest.svg?branch=master)](https://travis-ci.org/jdgriffith/doctrine-rest)
+
 Easy to use REST API generator simply by connecting to a database
 
 This works great for connecting to an existing database which has good normalized structure and getting an API from 
