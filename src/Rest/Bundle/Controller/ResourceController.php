@@ -23,7 +23,7 @@
    */
   class ResourceController extends Controller {
 
-    /**
+	  /**
      *
      * Get resources
      *
@@ -39,13 +39,12 @@
      */
     public function getCollectionAction(Request $request, $resource) {
 
-      $resourceManager = $this->_getResourceManager();
       $limit = $request->get("limit");
       $offset = $request->get("offset");
 
-      $collection = $resourceManager->collection($resource, $limit, $offset);
+      $collection = $this->_getResourceManager()->collection($resource, $limit, $offset);
 
-      return JsonResponse::create($resourceManager->serialize($collection));
+      return JsonResponse::create($this->_getResourceManager()->serialize($collection));
 
     }
 
@@ -62,32 +61,39 @@
      */
     public function getAction($resource, $id) {
 
-      $resourceManager = $this->_getResourceManager();
-      $entity = $resourceManager->get($resource, $id);
+      $entity = $this->_getResourceManager()->get($resource, $id);
 
-      return new JsonResponse($resourceManager->serialize($entity));
+      return new JsonResponse($this->_getResourceManager()->serialize($entity));
 
     }
 
-    /**
-     *
-     * Create a resource
-     *
-     * @Route("/{resource}", name="api_resource_create")
-     * @Method("POST")
-     *
-     * @param $resource
-     * @param $id
-     */
-    public function postAction(Request $request, $resource) {
+	  function __get($name) {
+		  // TODO: Implement __get() method.
+	  }
+
+	  /**
+	   *
+	   * Create a resource
+	   *
+	   * @Route("/{resource}", name="api_resource_create")
+	   * @Method("POST")
+	   *
+	   * @param Request $request
+	   * @param         $resource
+	   *
+	   * @internal param $id
+	   *
+	   * @return JsonResponse
+	   */
+	  public function postAction(Request $request, $resource) {
 
       // Gather entity attributes and values
       $params = $request->request->all();
 
-      $resourceManager = $this->_getResourceManager();
-      $entity = $resourceManager->create($resource, $params);
+      $entity = $this->_getResourceManager()->create($resource, $params);
 
-      return new JsonResponse($resourceManager->serialize($entity));
+      return new JsonResponse($this->_getResourceManager()->serialize($entity));
+
     }
 
     /**
@@ -107,10 +113,9 @@
       // Gather entity attributes and values
       $params = $request->request->all();
 
-      $resourceManager = $this->_getResourceManager();
-      $entity = $resourceManager->update($resource, $id, $params);
+      $entity = $this->_getResourceManager()->update($resource, $id, $params);
 
-      return new JsonResponse($resourceManager->serialize($entity));
+      return new JsonResponse($this->_getResourceManager()->serialize($entity));
 
     }
 
@@ -128,18 +133,25 @@
      */
     public function deleteAction($resource, $id) {
 
-      $resourceManager = $this->_getResourceManager();
-      $entity = $resourceManager->delete($resource, $id);
+      $entity = $this->_getResourceManager()->delete($resource, $id);
 
       return new JsonResponse("$resource:$id has been deleted");
 
     }
 
+	  /**
+	   * @param $entity
+	   *
+	   * @return mixed
+	   */
     public function filter($entity) {
 
       return $entity;
     }
 
+	  /**
+	   * @return object
+	   */
     private function _getResourceManager() {
 
       return $this->container->get("resource");

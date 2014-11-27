@@ -25,8 +25,8 @@ class DoctrineValueObject {
    * @param ContainerInterface $container
    * @param EntityManager $em
    */
-  public function __construct(ContainerInterface $container, EntityManager $em)
-  {
+  public function __construct(ContainerInterface $container, EntityManager $em) {
+
     $this->container = $container;
     $this->em = $em;
     $this->cmf = $em->getMetadataFactory();
@@ -133,6 +133,5 @@ class DoctrineValueObject {
     }
 
   }
-
 
 }
