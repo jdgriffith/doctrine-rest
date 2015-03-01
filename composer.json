@@ -24,8 +24,7 @@
         "bshaffer/oauth2-server-php": "dev-master",
         "bshaffer/oauth2-server-bundle": "dev-master",
         "oodle/krumo-bundle": "dev-master",
-        "jms/serializer-bundle": "*",
-        "codeception/codeception": "*"
+        "jms/serializer-bundle": "*"
     },
     "scripts": {
         "post-install-cmd": [

@@ -17,7 +17,7 @@
    * <http://www.doctrine-project.org>.
    */
 
-  namespace Schema\Bundle\Command;
+  namespace Rest\Bundle\Command;
 
   use Symfony\Component\Console\Input\InputArgument;
   use Symfony\Component\Console\Input\InputOption;
