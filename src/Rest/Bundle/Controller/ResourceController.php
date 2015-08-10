@@ -48,7 +48,6 @@ class ResourceController extends Controller {
 
 		return JsonResponse::create($this->_getResourceManager()
 			->serialize($collection));
-
 	}
 
 	/**
@@ -143,7 +142,6 @@ class ResourceController extends Controller {
 			->delete($resource, $id);
 
 		return new JsonResponse("$resource:$id has been deleted");
-
 	}
 
 	/**
@@ -162,7 +160,5 @@ class ResourceController extends Controller {
 	private function _getResourceManager() {
 
 		return $this->container->get("resource");
-
 	}
-
 }

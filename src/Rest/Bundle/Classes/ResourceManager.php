@@ -71,7 +71,7 @@ class ResourceManager extends ContainerAware {
 
 	public function getResourceMetaData($resource) {
 
-		return $this->em->getClassMetadata("Schema\\Bundle\\Entity\\" . $resource);
+		return $this->em->getClassMetadata("Schema\\Bundle\\Entity\\" . ucfirst($resource));
 
 	}
 
@@ -82,7 +82,7 @@ class ResourceManager extends ContainerAware {
 	 */
 	private function _resourceExists($resource) {
 
-		if (class_exists("Schema\\Bundle\\Entity\\" . $resource)) {
+		if (class_exists("Schema\\Bundle\\Entity\\" . ucfirst($resource))) {
 			return true;
 		}
 
@@ -91,26 +91,36 @@ class ResourceManager extends ContainerAware {
 	}
 
 	/**
-	 * @param        $resource
+	 * Get the collection
+	 *
+	 * @param $resource
 	 * @param string $limit
 	 * @param string $offset
+	 * @return array
 	 */
 	public function collection($resource, $limit = '', $offset = '') {
 
-		if (!empty($limit) AND !empty($offset)) {
+		$resource = ucfirst($resource);
+
+		// if limit and offset are set
+		if ($limit != '' AND $offset != '') {
+
 			$entities = $this->_getRepository($resource)
 				->findBy([], [], $limit, $offset);
+
 		} else {
+
+			// get all
 			$entities = $this->_getRepository($resource)
 				->findAll();
 		}
 
+		return $entities;
 	}
 
 	public function get($resource, $id) {
 
-		return $this->em->find("Schema\\Bundle\\Entity\\" . $resource, $id);
-
+		return $this->em->find("Schema\\Bundle\\Entity\\" . ucfirst($resource), $id);
 	}
 
 	/**
@@ -121,7 +131,7 @@ class ResourceManager extends ContainerAware {
 	 */
 	public function create($resource, $params = []) {
 
-		$entityClass = "Schema\\Bundle\\Entity\\" . $resource;
+		$entityClass = "Schema\\Bundle\\Entity\\" . ucfirst($resource);
 
 		$entity = new $entityClass();
 
@@ -133,7 +143,6 @@ class ResourceManager extends ContainerAware {
 		$this->em->flush();
 
 		return $entity;
-
 	}
 
 	/**
@@ -155,7 +164,6 @@ class ResourceManager extends ContainerAware {
 		$this->em->flush();
 
 		return $entity;
-
 	}
 
 	/**
@@ -169,7 +177,6 @@ class ResourceManager extends ContainerAware {
 
 		$this->em->remove($entity);
 		$this->em->flush();
-
 	}
 
 	/**
@@ -180,7 +187,6 @@ class ResourceManager extends ContainerAware {
 	public function getValueObject($entity) {
 
 		return $this->valueObject->getValueObject($entity);
-
 	}
 
 	/**
@@ -191,10 +197,9 @@ class ResourceManager extends ContainerAware {
 	 */
 	private function _getRepository($resource) {
 
-		$repository = $this->em->getRepository("SchemaBundle:$resource");
+		$resource = ucfirst($resource);
 
 		return $this->em->getRepository("SchemaBundle:$resource");
-
 	}
 
 	/**
@@ -207,9 +212,14 @@ class ResourceManager extends ContainerAware {
 
 		// compensate for nested objects
 		if (is_array($entity)) {
+
+			// plural
 			$entities = $entity;
+
 			foreach ($entities as $key => $entity) {
-				$entities[$key] = json_decode($this->serializer->serialize($entity, $format));
+
+					// serailize
+					$entities[$key] = json_decode($this->serializer->serialize($entity, $format));
 			}
 
 			return $entities;
@@ -217,5 +227,4 @@ class ResourceManager extends ContainerAware {
 
 		return json_decode($this->serializer->serialize($entity, $format));
 	}
-
 }
