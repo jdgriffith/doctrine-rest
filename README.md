@@ -22,4 +22,6 @@ and database.
 
 From this, you can now prepare to hit your first API URL.
 
+Merely testing events.
+
 
